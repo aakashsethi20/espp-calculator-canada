@@ -91,14 +91,18 @@ export default function App() {
       <footer className="border-t border-neutral-900 mt-16">
         <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-neutral-700">
           <p>Not financial advice — always verify with a tax professional.</p>
-          <a
-            href="https://www.mackenzieinvestments.com/en/investments/tax-centre"
-            target="_blank"
-            rel="noreferrer"
-            className="text-neutral-600 hover:text-neutral-400 transition-colors"
-          >
-            Tax rates reference: Mackenzie Investments →
-          </a>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <a
+              href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/frequently-asked-questions-individuals/canadian-income-tax-rates-individuals-current-previous-years.html"
+              target="_blank"
+              rel="noreferrer"
+              className="text-neutral-600 hover:text-neutral-400 transition-colors"
+            >
+              Tax rates reference: Canada Revenue Agency →
+            </a>
+            <span className="hidden sm:block text-neutral-800">·</span>
+            <p>Built by KashMoney Productions.</p>
+          </div>
         </div>
       </footer>
     </div>
