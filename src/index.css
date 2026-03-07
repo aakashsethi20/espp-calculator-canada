@@ -3,15 +3,29 @@
 @theme {
   --color-surface: #0a0a0a;
   --color-surface-alt: #111111;
-  --color-card: #1a1a1a;
+  --color-card: #141414;
   --color-accent: #4a8380;
   --color-accent-dark: #2a5553;
   --color-muted: #6b7280;
   --color-error: #ef4444;
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
 }
 
 body {
   background-color: var(--color-surface);
+  background-image: radial-gradient(ellipse 70% 50% at 85% 0%, rgba(74, 131, 128, 0.07) 0%, transparent 60%);
   color: #e5e5e5;
-  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Remove number input spinners */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
 }
