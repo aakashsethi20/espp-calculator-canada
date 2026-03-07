@@ -74,7 +74,7 @@ export function InputPanel({ form, onChange, lowerPrice }: Props) {
               Lower of the two prices (lookback, auto)
             </span>
             <span className="text-accent font-mono text-sm">
-              US${lowerPrice.toFixed(4)}
+              US${lowerPrice.toFixed(2)}
             </span>
           </div>
         )}

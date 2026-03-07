@@ -17,6 +17,10 @@ function fmtPct(n: number, sign = false): string {
   return `${prefix}${n.toFixed(2)}%`
 }
 
+function numClass(n: number): string {
+  return n < 0 ? 'text-error' : 'text-neutral-200'
+}
+
 interface RowProps {
   label: string
   value: string
@@ -89,12 +93,12 @@ export function ResultsPanel({ results }: Props) {
           Purchase Summary
         </h2>
         <Row label="Cash Deployed" value={fmtUSD(cashToBuyUSD)} />
-        <Row label="Purchase Price / Share" value={`US$${purchasePrice.toFixed(4)}`} />
+        <Row label="Purchase Price / Share" value={fmtUSD(purchasePrice)} />
         <Row label="Shares Purchased" value={numShares.toLocaleString('en-CA')} />
         <Row
           label="Immediate Gain in Value"
           value={fmtPct(immediateGainPct, true)}
-          valueClass="text-accent font-semibold"
+          valueClass={immediateGainPct >= 0 ? 'text-accent font-semibold' : 'text-error font-semibold'}
         />
       </div>
 
@@ -119,12 +123,12 @@ export function ResultsPanel({ results }: Props) {
           <div>
             <SectionLabel>Capital Gains</SectionLabel>
             <p className="text-[10px] text-muted mb-2">Gain above exercise price at sale</p>
-            <Row label="Capital Gains (USD)" value={fmtUSD(capitalGainsUSD)} />
-            <Row label="Capital Gains (CAD)" value={fmtCAD(capitalGainsCAD)} />
+            <Row label="Capital Gains (USD)" value={fmtUSD(capitalGainsUSD)} valueClass={numClass(capitalGainsUSD)} />
+            <Row label="Capital Gains (CAD)" value={fmtCAD(capitalGainsCAD)} valueClass={numClass(capitalGainsCAD)} />
             <Row
               label="Capital Gains Tax"
               value={fmtCAD(capitalGainsTaxOwedCAD)}
-              valueClass={capitalGainsTaxOwedCAD >= 0 ? 'text-error' : 'text-accent'}
+              valueClass={capitalGainsTaxOwedCAD !== 0 ? 'text-error' : 'text-neutral-200'}
             />
           </div>
         </div>
@@ -138,10 +142,10 @@ export function ResultsPanel({ results }: Props) {
           Net Result
         </h2>
         <div className="relative">
-          <Row label="Sell Value (USD)" value={fmtUSD(sellValueUSD)} />
-          <Row label="Sell Value (CAD)" value={fmtCAD(sellValueCAD)} />
-          <Row label="After Wire / Transfer Fee" value={fmtCAD(sellValueAfterWireCAD)} />
-          <Row label="After All Taxes" value={fmtCAD(moneyLeftAfterTaxesCAD)} />
+          <Row label="Sell Value (USD)" value={fmtUSD(sellValueUSD)} valueClass={numClass(sellValueUSD)} />
+          <Row label="Sell Value (CAD)" value={fmtCAD(sellValueCAD)} valueClass={numClass(sellValueCAD)} />
+          <Row label="After Wire / Transfer Fee" value={fmtCAD(sellValueAfterWireCAD)} valueClass={numClass(sellValueAfterWireCAD)} />
+          <Row label="After All Taxes" value={fmtCAD(moneyLeftAfterTaxesCAD)} valueClass={numClass(moneyLeftAfterTaxesCAD)} />
 
           <div className="mt-5 pt-5 border-t border-neutral-800">
             <div className="flex items-end justify-between gap-4 mb-3">
