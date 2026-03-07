@@ -1,24 +1,20 @@
 import type { ESPPResults } from '../lib/espp'
 
-function fmtCAD(n: number): string {
-  const abs = Math.abs(n)
-  const f = abs.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-  return `${n < 0 ? '−' : ''}CA$${f}`
+function fmtCurrency(n: number, prefix: string, locale: string): string {
+  const f = Math.abs(n).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  return `${n < 0 ? '−' : ''}${prefix}${f}`
 }
 
-function fmtUSD(n: number): string {
-  const abs = Math.abs(n)
-  const f = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-  return `${n < 0 ? '−' : ''}US$${f}`
-}
+function fmtCAD(n: number): string { return fmtCurrency(n, 'CA$', 'en-CA') }
+function fmtUSD(n: number): string { return fmtCurrency(n, 'US$', 'en-US') }
 
 function fmtPct(n: number, sign = false): string {
   const prefix = sign && n > 0 ? '+' : ''
   return `${prefix}${n.toFixed(2)}%`
 }
 
-function numClass(n: number): string {
-  return n < 0 ? 'text-error' : 'text-neutral-200'
+function numClass(n: number): string | undefined {
+  return n < 0 ? 'text-error' : undefined
 }
 
 interface RowProps {

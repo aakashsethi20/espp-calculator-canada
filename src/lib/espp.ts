@@ -1,3 +1,5 @@
+export type FormValues = Record<keyof ESPPInputs, string>
+
 export interface ESPPInputs {
   companyDiscountPct: number
   contributionCAD: number

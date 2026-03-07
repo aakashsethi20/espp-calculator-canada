@@ -1,10 +1,8 @@
 import { useState, useMemo } from 'react'
-import { calculateESPP, type ESPPInputs } from './lib/espp'
+import { calculateESPP, type ESPPInputs, type FormValues } from './lib/espp'
 import { InputPanel } from './components/InputPanel'
 import { ResultsPanel } from './components/ResultsPanel'
 import './index.css'
-
-type FormValues = Record<keyof ESPPInputs, string>
 
 const DEFAULT_FORM: FormValues = {
   companyDiscountPct: '15',
@@ -37,12 +35,7 @@ export default function App() {
   const inputs = useMemo(() => parseInputs(form), [form])
   const results = useMemo(() => (inputs ? calculateESPP(inputs) : null), [inputs])
 
-  const lowerPrice = useMemo(() => {
-    const p = parseFloat(form.periodStartPrice)
-    const e = parseFloat(form.exercisePrice)
-    if (isNaN(p) || isNaN(e)) return undefined
-    return Math.min(p, e)
-  }, [form.periodStartPrice, form.exercisePrice])
+  const lowerPrice = results?.lowerPrice
 
   return (
     <div className="min-h-screen">

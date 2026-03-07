@@ -1,7 +1,5 @@
-import type { ESPPInputs } from '../lib/espp'
+import type { ESPPInputs, FormValues } from '../lib/espp'
 import { InputField } from './InputField'
-
-type FormValues = Record<keyof ESPPInputs, string>
 
 interface Props {
   form: FormValues
@@ -123,12 +121,12 @@ export function InputPanel({ form, onChange, lowerPrice }: Props) {
         />
         <div className="pt-1">
           <a
-            href="https://www.mackenzieinvestments.com/en/investments/tax-centre"
+            href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/frequently-asked-questions-individuals/canadian-income-tax-rates-individuals-current-previous-years.html"
             target="_blank"
             rel="noreferrer"
             className="text-[11px] text-accent/60 hover:text-accent transition-colors underline underline-offset-2"
           >
-            Look up your marginal tax rates (Mackenzie Investments) →
+            Look up your marginal tax rates (Canada Revenue Agency) →
           </a>
         </div>
       </Card>
