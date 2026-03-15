@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { calculateESPP, type ESPPInputs, type FormValues } from './lib/espp'
 import { InputPanel } from './components/InputPanel'
 import { ResultsPanel } from './components/ResultsPanel'
@@ -18,6 +18,19 @@ const DEFAULT_FORM: FormValues = {
   wireFeePct: '2',
 }
 
+function useSessionStorage<T>(key: string, initialValue: T) {
+  const [value, setValue] = useState<T>(() => {
+    const stored = sessionStorage.getItem(key)
+    return stored ? (JSON.parse(stored) as T) : initialValue
+  })
+
+  useEffect(() => {
+    sessionStorage.setItem(key, JSON.stringify(value))
+  }, [key, value])
+
+  return [value, setValue] as const
+}
+
 function parseInputs(form: FormValues): ESPPInputs | null {
   const entries = Object.entries(form) as [keyof ESPPInputs, string][]
   const parsed = Object.fromEntries(
@@ -28,7 +41,7 @@ function parseInputs(form: FormValues): ESPPInputs | null {
 }
 
 export default function App() {
-  const [form, setForm] = useState<FormValues>(DEFAULT_FORM)
+  const [form, setForm] = useSessionStorage<FormValues>('espp-inputs', DEFAULT_FORM)
 
   const handleChange = (field: keyof ESPPInputs, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }))
