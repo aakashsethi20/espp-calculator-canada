@@ -20,6 +20,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Date input — dark mode calendar popup */
+input[type='date'] {
+  color-scheme: dark;
+}
+input[type='date']::-webkit-calendar-picker-indicator {
+  opacity: 0.4;
+  cursor: pointer;
+  filter: invert(1);
+}
+
 /* Remove number input spinners */
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
