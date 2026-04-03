@@ -1,10 +1,15 @@
 import { useState, useEffect, useMemo } from 'react'
 import { calculateESPP, type ESPPInputs, type FormValues } from './lib/espp'
+import type { PurchaseLot, SaleTransaction } from './lib/types'
 import { InputPanel } from './components/InputPanel'
 import { ResultsPanel } from './components/ResultsPanel'
+import { TabNav } from './components/TabNav'
+import { TransactionTable } from './components/TransactionTable'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import './index.css'
+
+type Tab = 'calculator' | 'transactions'
 
 const DEFAULT_FORM: FormValues = {
   companyDiscountPct: '15',
@@ -41,7 +46,10 @@ function parseInputs(form: FormValues): ESPPInputs | null {
 }
 
 export default function App() {
+  const [activeTab, setActiveTab] = useSessionStorage<Tab>('active-tab', 'calculator')
   const [form, setForm] = useSessionStorage<FormValues>('espp-inputs', DEFAULT_FORM)
+  const [lots, setLots] = useSessionStorage<PurchaseLot[]>('espp-lots', [])
+  const [sales, setSales] = useSessionStorage<SaleTransaction[]>('espp-sales', [])
 
   const handleChange = (field: keyof ESPPInputs, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }))
@@ -87,26 +95,38 @@ export default function App() {
       </header>
 
       {/* Main */}
-      <main className="max-w-6xl mx-auto px-6 py-10">
-        <div className="mb-8">
+      <main className="max-w-[85rem] mx-auto px-6 py-10">
+        <div className="mb-6">
           <h1 className="text-2xl font-semibold text-neutral-100 mb-2">
             Calculate your ESPP returns
           </h1>
           <p className="text-sm text-muted leading-relaxed">
-            Enter your ESPP parameters to see tax obligations, net gain, and ROI as a Canadian
-            employee.{' '}
+            For Canadian employees receiving USD-denominated ESPP grants.{' '}
             <span className="text-neutral-600">Fields marked </span>
             <span className="text-accent">*</span>
             <span className="text-neutral-600"> are required.</span>
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-          <InputPanel form={form} onChange={handleChange} lowerPrice={lowerPrice} />
-          <div className="lg:sticky lg:top-20">
-            <ResultsPanel results={results} />
+        <TabNav activeTab={activeTab} onChange={setActiveTab} />
+
+        {activeTab === 'calculator' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <InputPanel form={form} onChange={handleChange} lowerPrice={lowerPrice} />
+            <div className="lg:sticky lg:top-20">
+              <ResultsPanel results={results} />
+            </div>
           </div>
-        </div>
+        )}
+
+        {activeTab === 'transactions' && (
+          <TransactionTable
+            lots={lots}
+            sales={sales}
+            onLotsChange={setLots}
+            onSalesChange={setSales}
+          />
+        )}
       </main>
 
       {/* Footer */}

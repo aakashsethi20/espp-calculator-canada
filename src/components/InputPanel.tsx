@@ -1,5 +1,8 @@
+import { useState, useEffect } from 'react'
 import type { ESPPInputs, FormValues } from '../lib/espp'
 import { InputField } from './InputField'
+import { DateField } from './DateField'
+import { useFxRate } from '../hooks/useFxRate'
 
 interface Props {
   form: FormValues
@@ -20,6 +23,27 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 }
 
 export function InputPanel({ form, onChange, lowerPrice }: Props) {
+  const [fxDate, setFxDate] = useState('')
+  const [isAutoFx, setIsAutoFx] = useState(false)
+  const { rate: autoRate, loading: fxLoading } = useFxRate(fxDate)
+
+  function handleFxDateChange(date: string) {
+    setFxDate(date)
+    setIsAutoFx(true)
+  }
+
+  // When auto-rate arrives, populate the fxRate field
+  useEffect(() => {
+    if (autoRate !== null && isAutoFx) {
+      onChange('fxRate', autoRate.toFixed(4))
+    }
+  }, [autoRate]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  function handleFxRateManualChange(v: string) {
+    setIsAutoFx(false)
+    onChange('fxRate', v)
+  }
+
   return (
     <div className="space-y-4">
       <Card title="ESPP Setup">
@@ -41,14 +65,37 @@ export function InputPanel({ form, onChange, lowerPrice }: Props) {
           min={0}
           step="0.01"
         />
-        <InputField
-          label="FX Rate (1 USD = ? CAD)"
-          value={form.fxRate}
-          onChange={(v) => onChange('fxRate', v)}
-          min={0}
-          step="0.0001"
-          hint="e.g. 1.36"
+        <DateField
+          label="FX Rate Date (auto-fetch)"
+          value={fxDate}
+          onChange={handleFxDateChange}
+          loading={fxLoading}
+          hint="Pick the exercise date to auto-fetch the Bank of Canada rate"
         />
+        <div>
+          <label className="block text-[11px] font-medium tracking-[0.14em] uppercase text-muted mb-2">
+            FX Rate (1 USD = ? CAD)
+            {isAutoFx && autoRate !== null && (
+              <span className="ml-1.5 text-[9px] tracking-widest text-accent border border-accent/30 rounded px-1 py-0.5 normal-case font-normal">
+                auto
+              </span>
+            )}
+          </label>
+          <div className="flex items-baseline gap-2 border-b border-neutral-800 focus-within:border-accent pb-2 transition-colors duration-200">
+            <input
+              type="number"
+              value={form.fxRate}
+              onChange={(e) => handleFxRateManualChange(e.target.value)}
+              min={0}
+              step="0.0001"
+              placeholder="e.g. 1.36"
+              className="flex-1 min-w-0 bg-transparent text-neutral-100 text-sm font-mono outline-none placeholder:text-neutral-700 caret-accent"
+            />
+          </div>
+          <p className="text-[11px] text-muted mt-1.5 leading-relaxed">
+            Override or enter manually if no date selected
+          </p>
+        </div>
         <InputField
           label="Stock Price — Period Start"
           value={form.periodStartPrice}
