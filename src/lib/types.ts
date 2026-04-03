@@ -14,8 +14,7 @@ export interface SaleTransaction {
   sellDate: string              // "YYYY-MM-DD"
   sharesSold: number
   sellPricePerShare: number     // USD
-  settlementDate: string        // "YYYY-MM-DD" (auto: sellDate + T+1, editable)
-  settlementDateFxRate: number  // 1 USD = X CAD, auto-fetched or manual
+  sellDateFxRate: number        // 1 USD = X CAD, auto-fetched or manual
 }
 
 /** Computed result for a single sale transaction */
@@ -24,6 +23,6 @@ export interface TransactionResult {
   acbUSD: number                // FMV × shares
   acbCAD: number                // acbUSD × purchase FX rate
   proceedsUSD: number           // sell price × shares
-  proceedsCAD: number           // proceedsUSD × settlement FX rate
+  proceedsCAD: number           // proceedsUSD × sell date FX rate
   gainLossCAD: number           // proceedsCAD − acbCAD
 }

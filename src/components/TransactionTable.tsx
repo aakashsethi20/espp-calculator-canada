@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { PurchaseLot, SaleTransaction } from '../lib/types'
-import { calculateAllTransactions, getRemainingShares, inferSettlementDate } from '../lib/transactions'
+import { calculateAllTransactions, getRemainingShares } from '../lib/transactions'
 import { useFxRate } from '../hooks/useFxRate'
 import { DateField } from './DateField'
 import { exportTransactionsToCSV, downloadCSV } from '../lib/csv-export'
@@ -159,34 +159,33 @@ interface SaleRowProps {
 }
 
 function SaleRow({ sale, lots, onChange, onDelete }: SaleRowProps) {
-  const { rate: settlementRate, loading: settlementLoading } = useFxRate(sale.settlementDate)
+  const { rate: sellRate, loading: sellLoading } = useFxRate(sale.sellDate)
   const [isAutoRate, setIsAutoRate] = useState(false)
 
   useEffect(() => {
-    if (settlementRate !== null && sale.settlementDateFxRate === 0) {
-      onChange({ ...sale, settlementDateFxRate: settlementRate })
+    if (sellRate !== null && sale.sellDateFxRate === 0) {
+      onChange({ ...sale, sellDateFxRate: sellRate })
       setIsAutoRate(true)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settlementRate])
+  }, [sellRate])
 
   const lot = lots.find((l) => l.id === sale.lotId)
   const proceedsUSD = sale.sellPricePerShare * sale.sharesSold
-  const proceedsCAD = sale.settlementDateFxRate > 0 ? proceedsUSD * sale.settlementDateFxRate : null
+  const proceedsCAD = sale.sellDateFxRate > 0 ? proceedsUSD * sale.sellDateFxRate : null
   const acbCAD = lot && lot.purchaseDateFxRate > 0
     ? lot.fmvOnPurchaseDate * sale.sharesSold * lot.purchaseDateFxRate
     : null
   const gainLoss = proceedsCAD !== null && acbCAD !== null ? proceedsCAD - acbCAD : null
 
   function handleSellDateChange(date: string) {
-    const settlement = inferSettlementDate(date)
-    onChange({ ...sale, sellDate: date, settlementDate: settlement, settlementDateFxRate: 0 })
+    onChange({ ...sale, sellDate: date, sellDateFxRate: 0 })
     setIsAutoRate(false)
   }
 
   function handleFxChange(val: string) {
     setIsAutoRate(false)
-    onChange({ ...sale, settlementDateFxRate: parseFloat(val) || 0 })
+    onChange({ ...sale, sellDateFxRate: parseFloat(val) || 0 })
   }
 
   const remainingByLot = lot
@@ -264,10 +263,10 @@ function SaleRow({ sale, lots, onChange, onDelete }: SaleRowProps) {
         </div>
       </div>
 
-      {/* Settlement FX */}
+      {/* Sell Date FX */}
       <div className="flex flex-col">
         <label className="block text-[11px] font-medium tracking-[0.14em] uppercase text-muted mb-2 whitespace-nowrap">
-          Settlement FX
+          Sell Date FX
           {isAutoRate && (
             <span className="ml-1.5 text-[9px] tracking-widest text-accent border border-accent/30 rounded px-1 py-0.5 normal-case font-normal">
               auto
@@ -277,9 +276,9 @@ function SaleRow({ sale, lots, onChange, onDelete }: SaleRowProps) {
         <div className="flex-1 flex items-end border-b border-neutral-800 focus-within:border-accent pb-2">
           <input
             type="number"
-            value={sale.settlementDateFxRate || ''}
+            value={sale.sellDateFxRate || ''}
             onChange={(e) => handleFxChange(e.target.value)}
-            placeholder={settlementLoading ? 'fetching…' : '1.4000'}
+            placeholder={sellLoading ? 'fetching…' : '1.4000'}
             step="0.0001"
             className="w-full bg-transparent text-neutral-100 text-sm font-mono outline-none placeholder:text-neutral-700 caret-accent"
           />
@@ -367,8 +366,7 @@ export function TransactionTable({
       sellDate: '',
       sharesSold: 0,
       sellPricePerShare: 0,
-      settlementDate: '',
-      settlementDateFxRate: 0,
+      sellDateFxRate: 0,
     }
     onSalesChange([...sales, newSale])
   }
@@ -451,7 +449,7 @@ export function TransactionTable({
           <div>
             <div className="hidden lg:grid lg:grid-cols-9 gap-3 pb-2 border-b border-neutral-800">
               <span className="lg:col-span-2 text-[10px] font-medium tracking-[0.14em] uppercase text-neutral-600 whitespace-nowrap">Lot</span>
-              {['Shares Sold', 'Sell Date', 'Sell Price', 'Settlement FX', 'Proceeds (USD)', 'Proceeds (CAD)', 'Gain / Loss'].map((h) => (
+              {['Shares Sold', 'Sell Date', 'Sell Price', 'Sell Date FX', 'Proceeds (USD)', 'Proceeds (CAD)', 'Gain / Loss'].map((h) => (
                 <span key={h} className="text-[10px] font-medium tracking-[0.14em] uppercase text-neutral-600 whitespace-nowrap">{h}</span>
               ))}
             </div>

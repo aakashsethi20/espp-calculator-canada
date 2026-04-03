@@ -11,7 +11,7 @@ export function calculateTransaction(
   const acbUSD = lot.fmvOnPurchaseDate * sale.sharesSold
   const acbCAD = acbUSD * lot.purchaseDateFxRate
   const proceedsUSD = sale.sellPricePerShare * sale.sharesSold
-  const proceedsCAD = proceedsUSD * sale.settlementDateFxRate
+  const proceedsCAD = proceedsUSD * sale.sellDateFxRate
   const gainLossCAD = proceedsCAD - acbCAD
 
   return {
