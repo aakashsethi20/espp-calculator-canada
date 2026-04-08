@@ -31,8 +31,7 @@ const sale1: SaleTransaction = {
   sellDate: '2025-01-17',
   sharesSold: 100,
   sellPricePerShare: 27.20,
-  settlementDate: '2025-01-17',
-  settlementDateFxRate: 1.4435,
+  sellDateFxRate: 1.4435,
 }
 
 const sale2: SaleTransaction = {
@@ -41,8 +40,7 @@ const sale2: SaleTransaction = {
   sellDate: '2025-01-24',
   sharesSold: 221,
   sellPricePerShare: 27.70,
-  settlementDate: '2025-01-24',
-  settlementDateFxRate: 1.4336,
+  sellDateFxRate: 1.4336,
 }
 
 const sale3: SaleTransaction = {
@@ -51,8 +49,7 @@ const sale3: SaleTransaction = {
   sellDate: '2025-07-08',
   sharesSold: 326,
   sellPricePerShare: 28.85,
-  settlementDate: '2025-07-08',
-  settlementDateFxRate: 1.3677,
+  sellDateFxRate: 1.3677,
 }
 
 describe('calculateTransaction', () => {

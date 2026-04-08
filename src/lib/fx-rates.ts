@@ -6,18 +6,11 @@ const memoryCache = new Map<number, FxRateMap>()
 
 const SESSION_KEY_PREFIX = 'fx-rates-'
 
-/** Build the API URL for a given year. Uses proxy path in dev, direct in prod. */
+/** Build the Bank of Canada API URL for a given year. */
 function buildUrl(year: number): string {
   const start = `${year}-01-01`
   const end = `${year}-12-31`
-  const path = `/observations/FXUSDCAD/json?start_date=${start}&end_date=${end}`
-
-  // In dev, Vite proxy rewrites /api/boc → /valet
-  if (import.meta.env.DEV) {
-    return `/api/boc${path}`
-  }
-  // In prod, try Vercel serverless proxy
-  return `/api/fx-rates?start_date=${start}&end_date=${end}`
+  return `https://www.bankofcanada.ca/valet/observations/FXUSDCAD/json?start_date=${start}&end_date=${end}`
 }
 
 interface BocObservation {
@@ -138,4 +131,15 @@ export async function getRateForDate(dateStr: string): Promise<number | null> {
 /** Clear the in-memory cache (useful for testing) */
 export function clearCache(): void {
   memoryCache.clear()
+
+  try {
+    for (let i = sessionStorage.length - 1; i >= 0; i--) {
+      const key = sessionStorage.key(i)
+      if (key?.startsWith(SESSION_KEY_PREFIX)) {
+        sessionStorage.removeItem(key)
+      }
+    }
+  } catch {
+    // sessionStorage unavailable — ignore
+  }
 }
