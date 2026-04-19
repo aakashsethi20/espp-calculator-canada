@@ -102,9 +102,9 @@ export default function App() {
           </h1>
           <p className="text-sm text-muted leading-relaxed">
             For Canadian employees receiving USD-denominated ESPP grants.{' '}
-            <span className="text-neutral-600">Fields marked </span>
+            <span className="text-neutral-500">Fields marked </span>
             <span className="text-accent">*</span>
-            <span className="text-neutral-600"> are required.</span>
+            <span className="text-neutral-500"> are required.</span>
           </p>
         </div>
 

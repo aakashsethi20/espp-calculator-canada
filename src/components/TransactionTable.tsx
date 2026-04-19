@@ -403,7 +403,7 @@ export function TransactionTable({
           <div>
             <div className="hidden lg:grid lg:grid-cols-6 gap-3 pb-2 border-b border-neutral-800">
               {['Purchase Date', 'Shares', 'FMV (USD)', 'FX Rate', 'ACB (USD)', 'ACB (CAD)'].map((h) => (
-                <span key={h} className="text-[10px] font-medium tracking-[0.14em] uppercase text-neutral-600">
+                <span key={h} className="text-[10px] font-medium tracking-[0.14em] uppercase text-neutral-400">
                   {h}
                 </span>
               ))}
@@ -448,9 +448,9 @@ export function TransactionTable({
         ) : (
           <div>
             <div className="hidden lg:grid lg:grid-cols-9 gap-3 pb-2 border-b border-neutral-800">
-              <span className="lg:col-span-2 text-[10px] font-medium tracking-[0.14em] uppercase text-neutral-600 whitespace-nowrap">Lot</span>
+              <span className="lg:col-span-2 text-[10px] font-medium tracking-[0.14em] uppercase text-neutral-400 whitespace-nowrap">Lot</span>
               {['Shares Sold', 'Sell Date', 'Sell Price', 'Sell Date FX', 'Proceeds (USD)', 'Proceeds (CAD)', 'Gain / Loss'].map((h) => (
-                <span key={h} className="text-[10px] font-medium tracking-[0.14em] uppercase text-neutral-600 whitespace-nowrap">{h}</span>
+                <span key={h} className="text-[10px] font-medium tracking-[0.14em] uppercase text-neutral-400 whitespace-nowrap">{h}</span>
               ))}
             </div>
             {sales.map((sale) => (
